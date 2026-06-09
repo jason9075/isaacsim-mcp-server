@@ -1,0 +1,41 @@
+services:
+  isaac-sim:
+    image: nvcr.io/nvidia/isaac-sim:${ISAAC_SIM_VERSION:-5.0.0}
+    container_name: isaac-sim
+    restart: "no"
+    environment:
+      - ACCEPT_EULA=${ACCEPT_EULA:-Y}
+      - PRIVACY_CONSENT=Y
+      - DISPLAY=${DISPLAY}
+      - WAYLAND_DISPLAY=${WAYLAND_DISPLAY}
+      - XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR}
+      - OMNI_KIT_ALLOW_ROOT=1
+    volumes:
+      # Display
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}:${XDG_RUNTIME_DIR}/${WAYLAND_DISPLAY}
+      # Shared memory and persistence
+      - /dev/shm:/dev/shm
+      - ../data:/isaac-sim/my_data
+      - ../assets:/isaac-sim/assets
+      - ../configs:/isaac-sim/configs
+      - ../scripts:/isaac-sim/scripts_local
+      - ./isaac.sim.mcp_extension:/isaac-sim/exts/isaac.sim.mcp_extension
+      # Hardware
+      - /dev:/dev
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: cdi
+              capabilities: [gpu]
+              device_ids:
+                - nvidia.com/gpu=all
+    network_mode: host
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        # Standby Mode: Keep container alive but idle
+        echo "Container started in standby mode. Use 'make gui' or 'make sim' to launch applications."
+        sleep infinity

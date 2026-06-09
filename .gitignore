@@ -84,3 +84,8 @@ mcp_cache/
 
 # Code agents configurations
 .claude
+
+.direnv/
+
+docker/.env
+
