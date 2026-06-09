@@ -16,6 +16,7 @@ down:
 
 # Launch Isaac Sim GUI inside the running container (extension available in Extension Manager)
 gui:
+    xhost +local:docker
     docker compose -f {{ COMPOSE_FILE }} exec isaac-sim \
         /isaac-sim/isaac-sim.sh \
         --ext-folder /isaac-sim/exts \

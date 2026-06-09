@@ -21,6 +21,8 @@
             pkgs.uv
             pkgs.ruff
             pkgs.pre-commit
+            pkgs.xorg.xhost
+            pkgs.docker-compose
           ];
 
           env = {
